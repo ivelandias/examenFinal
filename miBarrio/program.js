@@ -105,3 +105,44 @@ async function loadPolygon() {
 }
 
 loadPolygon();
+
+document.addEventListener("DOMContentLoaded", async function () {
+    const sitpMap = L.map('sitp-map').setView([4.6097, -74.0817], 15);
+
+    // Cargar mapa base
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(sitpMap);
+
+    // Cargar el polígono de Timiza
+    let response = await fetch('timiza.geojson');
+    let timizaGeoJSON = await response.json();
+    let timizaLayer = L.geoJSON(timizaGeoJSON, { color: 'blue' }).addTo(sitpMap);
+
+    // Extensión del polígono para centrar el mapa
+    sitpMap.fitBounds(timizaLayer.getBounds());
+
+    // Cargar las estaciones del SITP
+    let sitpResponse = await fetch('Paraderos_Zonales_del_SITP.geojson');
+    let sitpData = await sitpResponse.json();
+
+    // Filtrar solo las estaciones dentro del polígono de Timiza
+    let sitpLayer = L.geoJSON(sitpData, {
+        filter: function (feature) {
+            return turf.booleanPointInPolygon(feature.geometry, timizaGeoJSON.features[0].geometry);
+        },
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+                radius: 6,
+                fillColor: "red",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).on('click', function () {
+                let nombreEstacion = feature.properties.nombre || "Estación sin nombre"; // Asegurar que el campo no sea undefined
+                alert(`📍 Estación SITP: ${nombreEstacion}`);
+            });
+        }
+    }).addTo(sitpMap);
+});
