@@ -68,3 +68,12 @@ h2 {
     cursor: ew-resize;
     z-index: 10;
 }
+
+#polygon-info {
+    margin-top: 20px;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 50%;
+}

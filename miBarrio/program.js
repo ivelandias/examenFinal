@@ -79,3 +79,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.addEventListener('mouseup', function () { isDragging = false; });
 });
+
+async function loadPolygon() {
+    let response = await fetch('timiza.geojson');
+    let data = await response.json();
+    let polygonStyle = { color: 'blue', weight: 3, fillOpacity: 0.3 };
+
+    // Agregar el polígono a ambos mapas
+    let geoJsonLayer = L.geoJSON(data, { style: polygonStyle }).addTo(map1);
+    L.geoJSON(data, { style: polygonStyle }).addTo(map2);
+
+    // Calcular métricas con Turf.js
+    let area = turf.area(data).toFixed(2);
+    let perimeter = turf.length(data, { units: 'meters' }).toFixed(2);
+    let centroid = turf.centroid(data).geometry.coordinates;
+    let bbox = turf.bbox(data);
+    let vertices = data.features[0].geometry.coordinates[0].length;
+
+    // Mostrar los datos en la interfaz
+    document.getElementById('area').textContent = area;
+    document.getElementById('perimeter').textContent = perimeter;
+    document.getElementById('centroid').textContent = `[${centroid[1]}, ${centroid[0]}]`;
+    document.getElementById('bbox').textContent = `[${bbox[1]}, ${bbox[0]}] a [${bbox[3]}, ${bbox[2]}]`;
+    document.getElementById('vertices').textContent = vertices;
+}
+
+loadPolygon();

@@ -13,6 +13,7 @@
      crossorigin=""></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
 </head>
 <body>
     <div class="hero">
@@ -31,6 +32,18 @@
         <div id="slider"></div>
         <div id="map2" class="map-side"></div>
     </div>
+
+    <div id="info">
+    <h3>Información del Barrio Timiza</h3>
+    <p>Área: <span id="area"></span></p>
+    <p>Perímetro: <span id="perimetro"></span></p>
+    <p>Centroide: <span id="centroide"></span></p>
+    <p>Bounding Box: <span id="boundingBox"></span></p>
+    <p>Vértices: <span id="vertices"></span></p>
+</div>
+    
+    <script src="program.js"></script>
+    
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min.js"></script>
